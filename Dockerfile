@@ -4,6 +4,6 @@ COPY . /usr/src/social-media-analysis
 
 WORKDIR /usr/src/social-media-analysis
 
-RUN javac DemoCrawler.java
+RUN javac src/main/java/crawler/DemoCrawler.java
 
 CMD ["java", "DemoCrawler"]
