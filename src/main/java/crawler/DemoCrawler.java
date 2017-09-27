@@ -94,7 +94,7 @@ public class DemoCrawler {
         
     }
  
-    private static void insert(String msg, String useCase) throws UnknownHostException{
+    /*private static void insert(String msg, String useCase) throws UnknownHostException{
         
         boolean relevancy = false;
         
@@ -149,6 +149,6 @@ public class DemoCrawler {
                 System.out.println("Error on send: " + e);
             }
         }
-    }
+    }*/
     
 }
