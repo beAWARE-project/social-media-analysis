@@ -61,7 +61,7 @@
     <build>
         <plugins>
 
-            <!-- download source code in Eclipse, best practice 
+            <!-- download source code in Eclipse, best practice -->
             <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-eclipse-plugin</artifactId>
@@ -70,7 +70,7 @@
                             <downloadSources>true</downloadSources>
                             <downloadJavadocs>false</downloadJavadocs>
                     </configuration>
-            </plugin>-->
+            </plugin>
 
             <!-- Set a compiler level -->
             <plugin>
@@ -78,8 +78,8 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>2.3.2</version>
                     <configuration>
-                            <source>${jdk.version}</source>
-                            <target>${jdk.version}</target>
+                            <source>1.8</source>
+                            <target>1.8</target>
                     </configuration>
             </plugin>
 
