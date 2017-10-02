@@ -4,6 +4,4 @@ COPY . /usr/src/social-media-analysis
 
 WORKDIR /usr/src/social-media-analysis
 
-RUN javac -classpath target/social-media-analysis.jar src/main/java/crawler/DemoCrawler.java
-
-CMD ["java", "DemoCrawler"]
+CMD ["java", "-jar", "target/social-media-analysis"]

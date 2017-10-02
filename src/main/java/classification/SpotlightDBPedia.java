@@ -51,7 +51,8 @@ public class SpotlightDBPedia {
             DBCollection collection = db.getCollection(useCase);
 
             BasicDBObject whereQuery = new BasicDBObject();
-            whereQuery.put("relevant", true);
+            whereQuery.put("relevant", false);
+            whereQuery.put("concepts", new BasicDBObject("$exists", false));
             DBCursor cursor = collection.find(whereQuery);
             while (cursor.hasNext()) {
                 DBObject obj = cursor.next();
