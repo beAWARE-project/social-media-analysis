@@ -45,7 +45,7 @@ public class DemoCrawler {
         
         while(true){
             Letter letter = new Letter();
-            letter.addTweetID("1001002");
+            letter.addTweetID("1001003");
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
             letter.setTimestamp(timestamp.getTime());
             letter.setCollection(useCase);
