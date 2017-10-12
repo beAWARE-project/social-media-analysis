@@ -5,9 +5,12 @@ node ('beaware-jenkins-slave') {
         sh 'git submodule update'
     }
 
+    stage ('Compile (Maven)') {
+        sh 'mvn clean package'
+    }
+
     stage ('Build docker image') {
-        //sh 'mvn clean install'
-		sh 'docker build -t beaware/social-media-analysis .'
+		    sh 'docker build -t beaware/social-media-analysis .'
     }
 
     stage ('Push docker image') {
@@ -19,9 +22,9 @@ node ('beaware-jenkins-slave') {
     stage ('Deploy') {
         sh 'kubectl apply -f kubernetes/deploy.yaml -n prod --validate=false'
     }
-    
+
     stage ('Print-deploy logs') {
         sh 'sleep 60'
         sh 'kubectl  -n prod logs deploy/social-media-analysis -c social-media-analysis'
-    }    
+    }
 }

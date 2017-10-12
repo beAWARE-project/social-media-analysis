@@ -79,6 +79,7 @@ public class SimmoToStreamingAPI {
                     Date creationDate = (Date) post.get("creationDate");
                     TimeZone.setDefault(TimeZone.getTimeZone("+0000"));
                     newPost.append("created_at", creationDate.toString().replace("GMT", "+0000"));
+                    newPost.append("timestamp_ms", String.valueOf(creationDate.getTime()));
                 }
                 if(post.containsField("relevant")){
                     newPost.append("relevant", (boolean) post.get("relevant"));

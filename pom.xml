@@ -91,7 +91,7 @@
                     <configuration>
                             <!-- get all project dependencies -->
                             <descriptorRefs>
-                                    <descriptorRef>jar-with-dependencies</descriptorRef>
+                                    <descriptorRef>fat</descriptorRef>
                             </descriptorRefs>
                             <!-- MainClass in mainfest make a executable jar -->
                             <archive>
