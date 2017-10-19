@@ -34,18 +34,18 @@ import mykafka.Letter;
  * @author andreadisst
  */
 public class DemoCrawler {
-    
+
     private static String useCase = "EnglishFloods";
     private static DB db;
     private static Bus bus = new Bus();
     private static Gson gson = new Gson();
     private static int limit = 2240506;
-    
+
     public static void main(String[] args) throws InterruptedException, UnknownHostException {
-        
+
         while(true){
             Letter letter = new Letter();
-            letter.addTweetID("1001003");
+            letter.addTweetID("1001004");
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
             letter.setTimestamp(timestamp.getTime());
             letter.setCollection(useCase);
@@ -57,22 +57,22 @@ public class DemoCrawler {
             }
             TimeUnit.SECONDS.sleep(3);
         }
-        
+
         //After connection with mongo is restored
         /*MongoClient mongoClient = new MongoClient(Configuration.local_host, Configuration.port);
         db = mongoClient.getDB(Configuration.database);
         db.authenticate(Configuration.username, Configuration.password.toCharArray());
-        
+
         DBCollection collection = db.getCollection(useCase);
-        
+
         int skip = 0;
         while( skip < limit ){
             DBCursor cursor = collection.find().addOption(Bytes.QUERYOPTION_NOTIMEOUT).skip(skip).limit(1);
             DBObject post = cursor.next();
             String id = post.get("id_str").toString();
-            
-            //insert(post.toString(), useCase); 
-            
+
+            //insert(post.toString(), useCase);
+
             Letter letter = new Letter();
             letter.addTweetID(id);
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -84,22 +84,22 @@ public class DemoCrawler {
             }catch(IOException | InterruptedException | ExecutionException | TimeoutException e){
                 System.out.println("Error on send: " + e);
             }
-            
+
             skip++;
             if(skip==limit)
                 skip = 0;
         }
-        
+
         bus.close();*/
-        
+
     }
- 
+
     private static void insert(String msg, String useCase) throws UnknownHostException{
-        
+
         boolean relevancy = false;
-        
+
         JsonObject obj = new JsonParser().parse(msg).getAsJsonObject();
-        
+
         if(obj.has("entities")){
             JsonObject entities = obj.get("entities").getAsJsonObject();
             if(entities.has("media")){
@@ -111,7 +111,7 @@ public class DemoCrawler {
                         String imageURL = image.get("media_url").getAsString();
                         ImageResponse ir = Classification.classifyImage(imageURL, useCase); //change IP
                         relevancy = ir.getRelevancy();
-                        
+
                         image.addProperty("dcnn_feature", ir.getDcnnFeature());
                         media.set(0,image);
                         entities.add("media", media);
@@ -120,21 +120,21 @@ public class DemoCrawler {
                 }
             }
         }
-        
+
         if(!relevancy){
             System.out.print(" -> text classification");
             TextResponse tr = Classification.classifyText(obj.get("text").getAsString(), useCase, db);
             obj.addProperty("concepts", tr.getConcepts());
             relevancy = tr.getRelevancy();
         }
-        
+
         System.out.println(" -> " + relevancy);
         obj.addProperty("estimated_relevancy", relevancy);
-        
+
         DBCollection collection = db.getCollection(useCase);
         BasicDBObject res = (BasicDBObject) JSON.parse(obj.getAsString());
         collection.insert(res); //update with relevancy
-        
+
         if(relevancy){
             Letter letter = new Letter();
             letter.addTweetID(res.get("id_str").toString());
@@ -150,5 +150,5 @@ public class DemoCrawler {
             }
         }
     }
-    
+
 }
