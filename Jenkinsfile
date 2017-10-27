@@ -20,7 +20,8 @@ node ('beaware-jenkins-slave') {
     }
 
     stage ('Deploy') {
-	sh 'sed -i 's/IMAGE_TAG/'"$BUILD_NUMBER"'/g' kubernetes/deploy.yaml'
+	sh ''' 
+		sed -i 's/IMAGE_TAG/'"$BUILD_NUMBER"'/g' kubernetes/deploy.yaml '''
         sh 'kubectl apply -f kubernetes/deploy.yaml -n prod --validate=false'
     }
 
