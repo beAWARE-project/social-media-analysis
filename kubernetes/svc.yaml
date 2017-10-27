@@ -4,3 +4,6 @@ metadata:
   labels:
     app: social-media-analysis
   name: social-media-analysis
+spec:
+  selector:
+    app: social-media-analysis
