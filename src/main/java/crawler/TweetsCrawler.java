@@ -137,7 +137,7 @@ public class TweetsCrawler {
                 for(String keyword : keywords){
                     if(text.contains(keyword)){
                         try{
-                            System.out.print("Insert tweet to " + useCase);
+                            System.out.println("Insert tweet to " + useCase);
                             insert(msg, useCase);
                         }catch(Exception e){
                             System.out.println("Error: " + e);
@@ -155,7 +155,37 @@ public class TweetsCrawler {
         
         JsonObject obj = new JsonParser().parse(msg).getAsJsonObject();
         
-        if(obj.has("entities")){
+        if(obj.has("retweeted_status")){
+            obj.addProperty("is_retweeted_status",true);
+        }else{
+            obj.addProperty("is_retweeted_status",false);
+        }
+
+        if(obj.has("extended_tweet")){
+            JsonObject extended_tweet = obj.get("extended_tweet").getAsJsonObject();
+            if(extended_tweet.has("entities")){
+                JsonObject entities = extended_tweet.get("entities").getAsJsonObject();
+                if(entities.has("media")){
+                    JsonArray media = entities.get("media").getAsJsonArray();
+                    if(media.size() > 0){
+                        JsonObject image = media.get(0).getAsJsonObject();
+                        if(image.has("media_url")){
+                            System.out.print(" -> image classification");
+                            String imageURL = image.get("media_url").getAsString();
+                            ImageResponse ir = Classification.classifyImage(imageURL, useCase);
+                            relevancy = ir.getRelevancy();
+
+                            image.addProperty("dcnn_feature", ir.getDcnnFeature());
+                            media.set(0,image);
+                            entities.add("media", media);
+                            extended_tweet.add("entities", entities);
+                            obj.add("extended_tweet", extended_tweet);
+                        }
+                    }
+                }
+            }
+        }
+        else if(obj.has("entities")){
             JsonObject entities = obj.get("entities").getAsJsonObject();
             if(entities.has("media")){
                 JsonArray media = entities.get("media").getAsJsonArray();
@@ -177,8 +207,15 @@ public class TweetsCrawler {
         }
         
         if(!relevancy){
+            String text = "";
+            if(obj.has("extended_tweet")){
+                JsonObject extended_tweet = obj.get("extended_tweet").getAsJsonObject();
+                text = extended_tweet.get("full_text").getAsString();
+            }else{
+                text = obj.get("text").getAsString();
+            }
             System.out.print(" -> text classification");
-            TextResponse tr = Classification.classifyText(obj.get("text").getAsString(), useCase, db);
+            TextResponse tr = Classification.classifyText(text, useCase, db);
             obj.addProperty("concepts", tr.getConcepts());
             relevancy = tr.getRelevancy();
         }
@@ -187,7 +224,7 @@ public class TweetsCrawler {
         obj.addProperty("estimated_relevancy", relevancy);
         
         DBCollection collection = db.getCollection(useCase);
-        BasicDBObject res = (BasicDBObject) JSON.parse(obj.getAsString());
+        BasicDBObject res = (BasicDBObject) JSON.parse(obj.toString());
         collection.insert(res);
         
         if(relevancy){

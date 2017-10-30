@@ -282,6 +282,9 @@ public class SimmoToStreamingAPI {
                     BasicDBObject retweeted_status = new BasicDBObject();
                     retweeted_status.append("user", newUser);
                     newPost.append("retweeted_status", retweeted_status);
+                    newPost.append("is_retweeted_status", true);
+                }else{
+                    newPost.append("is_retweeted_status", false);
                 }
             
                 toTable.insert(newPost);

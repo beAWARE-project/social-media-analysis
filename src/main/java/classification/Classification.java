@@ -38,46 +38,42 @@ public class Classification {
     public static ImageResponse classifyImage(String imageURL, String useCase){
         
         ImageResponse ir = new ImageResponse();
-        
-        if(!useCase.contains("Fires") && !useCase.contains("Heatwave")){ //currently not supported
             
-            String concept = "";
-            if(useCase.contains("Fires")){
-                concept = "fires";
-            }else if(useCase.contains("Heatwave")){
-                concept = "heatwave";
-            }else if(useCase.contains("Floods")){
-                concept = "flood";
-            }
-            
-            try {
+        String concept = "";
+        if(useCase.contains("Fires")){
+            concept = "fire";
+        }else if(useCase.contains("Heatwave")){
+            concept = "heatwave";
+        }else if(useCase.contains("Floods")){
+            concept = "flood";
+        }
 
-                URL url = new URL("http://160.40.49.111:911/api/floodDetectionService/query?imageURL="+imageURL+"&concept="+concept);
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("GET");
-                conn.setRequestProperty("Accept", "application/json");
+        try {
 
-                if (conn.getResponseCode() == 200) {
-                    BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
-                    try{
-                        String output = br.readLine();
-                        if(!output.equals("null")){
-                            JsonObject obj = new JsonParser().parse(output).getAsJsonObject();
-                            ir = new ImageResponse(obj.get("dcnnFeature").getAsString().replace("\"", ""), Boolean.parseBoolean(obj.get("relevancy").getAsString()));
-                        }
-                    } catch (JsonSyntaxException | IOException e){
-                        System.out.println("Error on image classification: " + e);
+            URL url = new URL("http://160.40.49.111:911/api/floodDetectionService/query?imageURL="+imageURL+"&concept="+concept);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json");
+
+            if (conn.getResponseCode() == 200) {
+                BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+                try{
+                    String output = br.readLine();
+                    if(!output.equals("null")){
+                        JsonObject obj = new JsonParser().parse(output).getAsJsonObject();
+                        ir = new ImageResponse(obj.get("dcnnFeature").getAsString().replace("\"", ""), Boolean.parseBoolean(obj.get("relevancy").getAsString()));
                     }
+                } catch (JsonSyntaxException | IOException e){
+                    System.out.println("Error on image classification: " + e);
                 }
-
-                conn.disconnect();
-
-            } catch (MalformedURLException e) {
-                System.out.println("Error on image classification: " + e);
-            } catch (IOException e) {
-                System.out.println("Error on image classification: " + e);
             }
-            
+
+            conn.disconnect();
+
+        } catch (MalformedURLException e) {
+            System.out.println("Error on image classification: " + e);
+        } catch (IOException e) {
+            System.out.println("Error on image classification: " + e);
         }
         
         return ir;

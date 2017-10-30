@@ -32,3 +32,14 @@ spec:
           requests:
             cpu: 200m
             memory: 256Mi
+        env:
+          - name: SECRET_MH_API_KEY
+            valueFrom:
+             secretKeyRef:
+              name: mh-secret
+              key: api_key
+          - name: SECRET_MH_BROKERS
+            valueFrom:
+             secretKeyRef:
+              name: mh-secret
+              key: kafka_brokers_sasl

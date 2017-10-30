@@ -37,19 +37,21 @@ public class BusReader {
     public BusReader(){
         
         String userDir = System.getProperty("user.dir");
+        String api_key = System.getenv("SECRET_MH_API_KEY");
+        String kafka_brokers_sasl = System.getenv("SECRET_MH_BROKERS");
         Properties clientProperties = new Properties();
         
         resourceDir = userDir + File.separator + "resources";
         
         try{
-            updateJaasConfiguration(Configuration.api_key.substring(0, 16), Configuration.api_key.substring(16));
+            updateJaasConfiguration(api_key.substring(0, 16), api_key.substring(16));
         }catch(IOException e){
             System.out.println("Exception during bus configuration: " + e);
         }
         
-        clientProperties.put("bootstrap.servers", Configuration.kafka_brokers_sasl);
-        System.out.println("Kafka Endpoints: " + Configuration.kafka_brokers_sasl);
-        System.out.println("Admin REST Endpoint: " + Configuration.kafka_admin_url);
+        clientProperties.put("bootstrap.servers", kafka_brokers_sasl);
+        //System.out.println("Kafka Endpoints: " + kafka_brokers_sasl);
+        //System.out.println("Admin REST Endpoint: " + Configuration.kafka_admin_url);
         
         Properties consumerProperties = getClientConfiguration(clientProperties, "consumer.properties");
         kafkaConsumer = new KafkaConsumer<>(consumerProperties);
