@@ -55,7 +55,7 @@ public class DemoCrawler {
             }catch(IOException | InterruptedException | ExecutionException | TimeoutException e){
                 System.out.println("Error on send: " + e);
             }
-            TimeUnit.SECONDS.sleep(3);
+            TimeUnit.SECONDS.sleep(10);
         }
         
         //After connection with mongo is restored

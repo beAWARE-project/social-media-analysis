@@ -39,7 +39,6 @@ public class Bus {
         String userDir = System.getProperty("user.dir");
         String api_key = System.getenv("SECRET_MH_API_KEY");
         String kafka_brokers_sasl = System.getenv("SECRET_MH_BROKERS");
-        System.out.println("check environment variables:\n"+api_key+"\n"+kafka_brokers_sasl);
         Properties clientProperties = new Properties();
         
         resourceDir = userDir + File.separator + "resources";
