@@ -36,10 +36,10 @@ spec:
           - name: SECRET_MH_API_KEY
             valueFrom:
              secretKeyRef:
-              name: mh-secret
+              name: mh-secret2
               key: api_key
           - name: SECRET_MH_BROKERS
             valueFrom:
              secretKeyRef:
-              name: mh-secret
+              name: mh-secret2
               key: kafka_brokers_sasl
