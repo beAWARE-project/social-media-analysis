@@ -66,7 +66,7 @@ public class DemoCrawler {
                     TimeUnit.SECONDS.sleep(10);
                 }
                 
-                TimeUnit.MINUTES.sleep(30);
+                TimeUnit.MINUTES.sleep(1);
             }
 
             //bus.close();
