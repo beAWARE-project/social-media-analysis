@@ -5,7 +5,6 @@
  */
 package classification;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
@@ -14,15 +13,12 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
-import com.mongodb.MongoClient;
-import crawler.Configuration;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 

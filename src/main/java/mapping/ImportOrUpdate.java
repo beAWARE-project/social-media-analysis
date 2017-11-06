@@ -15,8 +15,11 @@ import com.mongodb.DBRef;
 import com.mongodb.MongoClient;
 import crawler.Configuration;
 import classification.SpotlightDBPedia;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -29,16 +32,17 @@ public class ImportOrUpdate {
     
     public static void main(String[] args) throws UnknownHostException{
         
-        MongoClient toMongoClient = new MongoClient( Configuration.host , Configuration.port);
+        MongoCredential credential = MongoCredential.createCredential(Configuration.username, "BeAware", Configuration.password.toCharArray());
+        MongoClient toMongoClient = new MongoClient(new ServerAddress(Configuration.host, Configuration.port), Arrays.asList(credential));
         DB toDB = toMongoClient.getDB("BeAware");
-        toDB.authenticate(Configuration.username, Configuration.password.toCharArray());
         String usecase = "ItalianFloods";
         DBCollection toTable = toDB.getCollection(usecase);
         
-        MongoClient mongoClient = new MongoClient( Configuration.old_host , Configuration.port);
+        credential = MongoCredential.createCredential(Configuration.old_username, "BeAware"+usecase, Configuration.old_password.toCharArray());
+        MongoClient mongoClient = new MongoClient(new ServerAddress(Configuration.old_host, Configuration.port), Arrays.asList(credential));
         DB db = mongoClient.getDB("BeAware"+usecase);
-        db.authenticate(Configuration.old_username, Configuration.old_password.toCharArray());
         DBCollection table = db.getCollection("Post");
+        
         BasicDBObject searchQuery = new BasicDBObject();
         searchQuery.put("relevant", new BasicDBObject("$exists", true));
         DBCursor cursor = table.find(searchQuery);//.addOption(Bytes.QUERYOPTION_NOTIMEOUT).skip(0).limit(200000);

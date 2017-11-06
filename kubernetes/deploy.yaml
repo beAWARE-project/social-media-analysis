@@ -43,3 +43,8 @@ spec:
              secretKeyRef:
               name: mh-secret2
               key: kafka_brokers_sasl
+          - name: SECRET_MONGO_URI
+            valueFrom:
+              secretKeyRef:
+                name: mongo-secret
+                key: uri

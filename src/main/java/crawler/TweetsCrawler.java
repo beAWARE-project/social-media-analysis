@@ -18,6 +18,8 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
 import com.mongodb.util.JSON;
 import com.twitter.hbc.ClientBuilder;
 import com.twitter.hbc.core.Client;
@@ -32,6 +34,7 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,9 +80,9 @@ public class TweetsCrawler {
     
     private static void prepareStreamingAPI() throws UnknownHostException{
         
-        MongoClient mongoClient = new MongoClient( Configuration.host , Configuration.port);
+        MongoCredential credential = MongoCredential.createCredential(Configuration.username, Configuration.database, Configuration.password.toCharArray());
+        MongoClient mongoClient = new MongoClient(new ServerAddress(Configuration.host, Configuration.port), Arrays.asList(credential));
         db = mongoClient.getDB(Configuration.database);
-        db.authenticate(Configuration.username, Configuration.password.toCharArray());
         
         List<String> keywords = getKeywords();
         

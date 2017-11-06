@@ -12,6 +12,8 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
 import crawler.Configuration;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -23,6 +25,7 @@ import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,9 +45,9 @@ public class SpotlightDBPedia {
             }
         }
         
-        MongoClient mongoClient = new MongoClient(Configuration.host, Configuration.port);
+        MongoCredential credential = MongoCredential.createCredential(Configuration.username, Configuration.database, Configuration.password.toCharArray());
+        MongoClient mongoClient = new MongoClient(new ServerAddress(Configuration.host, Configuration.port), Arrays.asList(credential));
         DB db = mongoClient.getDB(Configuration.database);
-        db.authenticate(Configuration.username, Configuration.password.toCharArray());
         
         for(String useCase: useCases){
             System.out.println(useCase);

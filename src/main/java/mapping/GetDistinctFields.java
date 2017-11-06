@@ -10,8 +10,11 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -26,8 +29,6 @@ public class GetDistinctFields {
         
         Set<String> fields = new TreeSet<>();
         
-        MongoClient mongoClient = new MongoClient( Configuration.host , Configuration.port);
-        
         List<String> databases = new ArrayList<>();
         for(String language: Configuration.languages){
             for(String pilot: Configuration.pilots){
@@ -36,8 +37,10 @@ public class GetDistinctFields {
         }
         
         for(String database: databases){
+            
+            MongoCredential credential = MongoCredential.createCredential(Configuration.old_username, database, Configuration.old_password.toCharArray());
+            MongoClient mongoClient = new MongoClient(new ServerAddress(Configuration.old_host, Configuration.port), Arrays.asList(credential));
             DB db = mongoClient.getDB(database);
-            db.authenticate(Configuration.old_username, Configuration.old_password.toCharArray());
 
             for(String collection : Configuration.old_collections){
                 DBCollection dbCollection = db.getCollection(collection);

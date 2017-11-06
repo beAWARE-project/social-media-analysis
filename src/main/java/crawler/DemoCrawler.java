@@ -5,23 +5,16 @@
  */
 package crawler;
 
-import classification.Classification;
-import classification.ImageResponse;
-import classification.TextResponse;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.mongodb.BasicDBObject;
-import com.mongodb.Bytes;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
-import com.mongodb.util.JSON;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -35,62 +28,52 @@ import mykafka.Letter;
  */
 public class DemoCrawler {
     
-    private static String useCase = "EnglishFloods";
-    private static DB db;
+    private static String useCase = "ItalianFloods";
     private static Bus bus = new Bus();
     private static Gson gson = new Gson();
-    private static int limit = 2240506;
     
-    public static void main(String[] args) throws InterruptedException, UnknownHostException {
+    public static void main(String[] args) throws InterruptedException {
         
-        while(true){
-            Letter letter = new Letter();
-            letter.addTweetID("1001006");
-            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-            letter.setTimestamp(timestamp.getTime());
-            letter.setCollection(useCase);
-            String message = gson.toJson(letter);
-            try{
-                bus.post(Configuration.socialMediaTextDemo, message);
-            }catch(IOException | InterruptedException | ExecutionException | TimeoutException e){
-                System.out.println("Error on send: " + e);
+        try{
+        
+            MongoClient mongoClient = MongoAPI.connect();
+            DB db = mongoClient.getDB("BeAware");
+            DBCollection collection = db.getCollection(useCase);
+
+            while( true ){
+                
+                DBCursor cursor = collection.find();
+                while (cursor.hasNext()) {
+                    
+                    DBObject post = cursor.next();
+                    String id = post.get("id_str").toString();
+
+                    //insert(post.toString(), useCase); 
+
+                    Letter letter = new Letter();
+                    letter.addTweetID(id);
+                    Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                    letter.setTimestamp(timestamp.getTime());
+                    letter.setCollection(useCase);
+                    String message = gson.toJson(letter);
+                    System.out.println(message);
+                    try{
+                        bus.post(Configuration.socialMediaTextDemo, message);
+                    }catch(IOException | InterruptedException | ExecutionException | TimeoutException e){
+                        System.out.println("Error on send: " + e);
+                    }
+                    
+                    TimeUnit.SECONDS.sleep(10);
+                }
+                
+                TimeUnit.MINUTES.sleep(30);
             }
-            TimeUnit.SECONDS.sleep(10);
+
+            //bus.close();
+            
+        }catch(UnknownHostException | KeyManagementException | NoSuchAlgorithmException e){
+            System.out.println("Error on demo crawler: " + e);
         }
-        
-        //After connection with mongo is restored
-        /*MongoClient mongoClient = new MongoClient(Configuration.local_host, Configuration.port);
-        db = mongoClient.getDB(Configuration.database);
-        db.authenticate(Configuration.username, Configuration.password.toCharArray());
-        
-        DBCollection collection = db.getCollection(useCase);
-        
-        int skip = 0;
-        while( skip < limit ){
-            DBCursor cursor = collection.find().addOption(Bytes.QUERYOPTION_NOTIMEOUT).skip(skip).limit(1);
-            DBObject post = cursor.next();
-            String id = post.get("id_str").toString();
-            
-            //insert(post.toString(), useCase); 
-            
-            Letter letter = new Letter();
-            letter.addTweetID(id);
-            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-            letter.setTimestamp(timestamp.getTime());
-            letter.setCollection(useCase);
-            String message = gson.toJson(letter);
-            try{
-                bus.post(Configuration.socialMediaTextDemo, message);
-            }catch(IOException | InterruptedException | ExecutionException | TimeoutException e){
-                System.out.println("Error on send: " + e);
-            }
-            
-            skip++;
-            if(skip==limit)
-                skip = 0;
-        }
-        
-        bus.close();*/
         
     }
 }

@@ -13,9 +13,12 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
 import crawler.Configuration;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -28,18 +31,14 @@ public class SimmoToStreamingAPI {
     
     public static void main(String[] args) throws UnknownHostException{
         
-        MongoClient mongoClient = new MongoClient( Configuration.host , Configuration.port);
-        
-        /*DB toDB = mongoClient.getDB("test1");
-        toDB.authenticate(Configuration.old_username, Configuration.old_password.toCharArray());
-        DBCollection toTable = toDB.getCollection("Test");*/
-        
-        DB toDB = mongoClient.getDB("BeAware");
-        toDB.authenticate(Configuration.username, Configuration.password.toCharArray());
+        MongoCredential credential = MongoCredential.createCredential(Configuration.username, Configuration.database, Configuration.password.toCharArray());
+        MongoClient toMongoClient = new MongoClient(new ServerAddress(Configuration.host, Configuration.port), Arrays.asList(credential));
+        DB toDB = toMongoClient.getDB(Configuration.database);
         DBCollection toTable = toDB.getCollection("DanishHeatwave");
         
-        DB db = mongoClient.getDB("BeAwareDanishHeatwave");
-        db.authenticate(Configuration.old_username, Configuration.old_password.toCharArray());
+        credential = MongoCredential.createCredential(Configuration.old_username, Configuration.database + "DanishHeatwave", Configuration.old_password.toCharArray());
+        MongoClient mongoClient = new MongoClient(new ServerAddress(Configuration.host, Configuration.port), Arrays.asList(credential));
+        DB db = mongoClient.getDB(Configuration.database + "DanishHeatwave");
         DBCollection table = db.getCollection("Post");
         DBCursor cursor = table.find().addOption(Bytes.QUERYOPTION_NOTIMEOUT).skip(0).limit(200000);
         while (cursor.hasNext()) {
