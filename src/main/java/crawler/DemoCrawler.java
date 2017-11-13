@@ -28,7 +28,7 @@ import mykafka.Letter;
  */
 public class DemoCrawler {
     
-    private static String useCase = "ItalianFloods";
+    private static String useCase = "EnglishFloods";
     private static Bus bus = new Bus();
     private static Gson gson = new Gson();
     
