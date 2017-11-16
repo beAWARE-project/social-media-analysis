@@ -115,12 +115,6 @@ public class DemoCrawler {
                     System.out.println("Error on send: " + e);
                 }
                 
-                try{
-                    bus.post(Configuration.incidentTopic021, report);
-                }catch(IOException | InterruptedException | ExecutionException | TimeoutException e){
-                    System.out.println("Error on send: " + e);
-                }
-                
                 TimeUnit.MINUTES.sleep(1);
             }
 
