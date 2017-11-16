@@ -141,13 +141,9 @@ public class MessageHubConsoleSample {
                 adminRestURL = args[1];
                 apiKey = args[2];*/
                 
-                apiKey = "BPWTh17zQ2kDvxuvmSoHqZEHEbbu6izktAHKC8aD2EGDVNeO";
-                adminRestURL = "https://kafka-admin-prod02.messagehub.services.eu-gb.bluemix.net:443";
-                bootstrapServers = "kafka03-prod02.messagehub.services.eu-gb.bluemix.net:9093," +
-                    "kafka02-prod02.messagehub.services.eu-gb.bluemix.net:9093," +
-                    "kafka04-prod02.messagehub.services.eu-gb.bluemix.net:9093," +
-                    "kafka05-prod02.messagehub.services.eu-gb.bluemix.net:9093," +
-                    "kafka01-prod02.messagehub.services.eu-gb.bluemix.net:9093";
+                apiKey = "";
+                adminRestURL = "";
+                bootstrapServers = "";
                 updateJaasConfiguration(apiKey.substring(0, 16), apiKey.substring(16));
                 /*if (args.length > 3) {
                     try {
