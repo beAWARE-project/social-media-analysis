@@ -79,7 +79,7 @@ public class DemoCrawler {
                     "        \"topicMajorVersion\": 1,\n" +
                     "        \"topicMinorVersion\": 0,\n" +
                     "        \"sender\": \"SMA\",\n" +
-                    "        \"msgIdentifier\": 554133,\n" +
+                    "        \"msgIdentifier\": \"554133\",\n" +
                     "        \"sentUTC\": \"2018-01-01T12:00:00Z\",\n" +
                     "        \"status\": \"Actual\",\n" +
                     "        \"actionType\": \"Update\",\n" +
@@ -93,7 +93,7 @@ public class DemoCrawler {
                     "    },\n" +
                     "    \"body\": {\n" +
                     "        \"incidentOriginator\": \"SMA\",\n" +
-                    "        \"incidentID\": 432115,\n" +
+                    "        \"incidentID\": \"432115\",\n" +
                     "        \"language\": \"en-US\",\n" +
                     "        \"incidentCategory\": \"Other\",\n" +
                     "        \"incidentType\": \"Other\",\n" +
