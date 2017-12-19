@@ -46,5 +46,5 @@ spec:
           - name: SECRET_MONGO_URI
             valueFrom:
               secretKeyRef:
-                name: mongo-secret
+                name: mongo-bw2-secret
                 key: uri
