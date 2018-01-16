@@ -6,16 +6,21 @@
 package crawler;
 
 import com.google.gson.Gson;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -31,41 +36,62 @@ public class DemoCrawler {
     private static String useCase = "EnglishFloodsLive";
     private static String realCase = "EnglishFloods";
     private static Bus bus = new Bus();
+    //private static CDR cdr = new CDR();
     private static Gson gson = new Gson();
     
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, IOException {
         
         try{
         
             MongoClient mongoClient = MongoAPI.connect();
             DB db = mongoClient.getDB("BeAware");
             DBCollection collection = db.getCollection(useCase);
+            DBCollection realCollection = db.getCollection(realCase);
 
             while( true ){
                 
                 DBCursor cursor = collection.find();
                 if(cursor.size()==17){
                     
-                    Letter letter = new Letter();
+                    //ArrayList<ReportPiece> reportPieces = new ArrayList<>();
                     
                     while (cursor.hasNext()) {
+                        
                         DBObject post = cursor.next();
-                        String id = post.get("id_str").toString();
-                        if((boolean) post.get("estimated_relevancy")){
+                        boolean relevancy = (boolean) post.get("estimated_relevancy");
+                        
+                        if(relevancy){
+                            long timestamp_ms = System.currentTimeMillis();
+                            String id = post.get("id_str").toString();
+                            String date = new java.text.SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy").format(new java.util.Date (timestamp_ms));
+                            
+                            BasicDBObject change = new BasicDBObject();
+                            change.append("$set", new BasicDBObject().append("created_at_live", date));
+                            BasicDBObject query = new BasicDBObject().append("id_str", id);
+                            realCollection.update(query, change);
+                            
+                            Letter letter = new Letter();
                             letter.addTweetID(id);
+                            letter.setTimestamp(timestamp_ms);
+                            letter.setCollection(realCase);
+                            String message = gson.toJson(letter);
+                            
+                            //DBObject user = (BasicDBObject) post.get("user");
+                            //reportPieces.add(new ReportPiece(post.get("text").toString(),user.get("name").toString(),post.get("created_at").toString(),id));
+                            
+                            try{
+                                bus.post(Configuration.socialMediaTextDemo, message);
+                            }catch(IOException | InterruptedException | ExecutionException | TimeoutException e){
+                                System.out.println("Error on send: " + e);
+                            }
+                            
+                            TimeUnit.SECONDS.sleep(3);
                         }
+                        
                     }
-
-                    Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-                    letter.setTimestamp(timestamp.getTime());
-                    letter.setCollection(realCase);
-                    String message = gson.toJson(letter);
-
-                    try{
-                        bus.post(Configuration.socialMediaTextDemo, message);
-                    }catch(IOException | InterruptedException | ExecutionException | TimeoutException e){
-                        System.out.println("Error on send: " + e);
-                    }
+                    
+                    //String twitterReport = generateReport(reportPieces);
+                    String twitterReport = "TwitterReport1516098723965.html";
                     
                     //empty EnglishFloodsLive
                     cursor = collection.find();
@@ -79,7 +105,7 @@ public class DemoCrawler {
                     "        \"topicMajorVersion\": 1,\n" +
                     "        \"topicMinorVersion\": 0,\n" +
                     "        \"sender\": \"SMA\",\n" +
-                    "        \"msgIdentifier\": \"554133\",\n" +
+                    "        \"msgIdentifier\": \"SMA00000001\",\n" +
                     "        \"sentUTC\": \"2018-01-01T12:00:00Z\",\n" +
                     "        \"status\": \"Actual\",\n" +
                     "        \"actionType\": \"Update\",\n" +
@@ -109,10 +135,10 @@ public class DemoCrawler {
                     "            \"longitude\": 12.33847\n" +
                     "        },\n" +
                     "        \"attachments\": [{\n" +
-                    "                \"attachmentName\": \"TwitterReport3154.html\",\n" +
+                    "                \"attachmentName\": \""+twitterReport+"\",\n" +
                     "                \"attachmentType\": \"webpage\",\n" +
                     "                \"attachmentTimeStampUTC\": \"2018-01-01T12:00:00Z\",\n" +
-                    "                \"attachmentURL\": \"http://object-store-app.eu-gb.mybluemix.net/objectStorage?file=TwitterReport3154.html\"\n" +
+                    "                \"attachmentURL\": \"http://object-store-app.eu-gb.mybluemix.net/objectStorage?file="+twitterReport+"\"\n" +
                     "            }\n" +
                     "        ]\n" +
                     "    }\n" +
@@ -127,7 +153,7 @@ public class DemoCrawler {
                     TimeUnit.SECONDS.sleep(10);
                     
                 }else{
-                    TimeUnit.SECONDS.sleep(10);
+                    TimeUnit.SECONDS.sleep(5);
                 }
                 
             }
@@ -139,4 +165,27 @@ public class DemoCrawler {
         }
         
     }
+    
+    /*private static String generateReport(ArrayList<ReportPiece> reportPieces) throws IOException{
+        
+        String filename = "TwitterReport"+System.currentTimeMillis()+".html";
+        
+        BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+        
+        for(ReportPiece reportPiece : reportPieces){
+            String line = "<div><p><b>"+reportPiece.getText()+"</b></p><p><i>posted by</i> "+
+                    reportPiece.getUser()+" <i>at</i> "+reportPiece.getDate()+"</p><p><a href=\"https://twitter.com/statuses/"+
+                    reportPiece.getId()+"\">View on Twitter</a></div><br>";
+            writer.write(line);
+        }
+        
+        writer.close();
+        
+        cdr.storeFile(filename, filename);
+        
+        File file = new File(filename);
+        file.delete();
+        
+        return filename;
+    }*/
 }
