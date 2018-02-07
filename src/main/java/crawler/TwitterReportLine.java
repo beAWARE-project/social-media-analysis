@@ -9,11 +9,11 @@ package crawler;
  *
  * @author andreadisst
  */
-public class ReportPiece {
+public class TwitterReportLine {
     
     private String text, user, date, id;
     
-    public ReportPiece(String text, String user, String date, String id){
+    public TwitterReportLine(String text, String user, String date, String id){
         this.text = text;
         this.user = user;
         this.date = date;

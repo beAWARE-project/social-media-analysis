@@ -5,7 +5,6 @@
  */
 package mykafka;
 
-import crawler.Configuration;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -23,6 +22,7 @@ import java.util.concurrent.TimeoutException;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import crawler.Configuration;
 
 
 /**
@@ -58,7 +58,11 @@ public class BusReader {
         
     }
     
-    public void read(String topicName) throws IOException, InterruptedException, ExecutionException, TimeoutException{
+    public KafkaConsumer<String, String> getKafkaConsumer(){
+        return kafkaConsumer;
+    }
+    
+    /*public void read(String topicName) throws IOException, InterruptedException, ExecutionException, TimeoutException{
         
         kafkaConsumer.subscribe(Arrays.asList(topicName));
         
@@ -74,12 +78,7 @@ public class BusReader {
           kafkaConsumer.close(); 
         }
 
-    }
-    
-    public static void main(String[] args) throws IOException, InterruptedException, ExecutionException, TimeoutException {
-        BusReader busReader = new BusReader();
-        busReader.read(Configuration.socialMediaTextDemo);
-    }
+    }*/
     
     public void close(){
         kafkaConsumer.close(1000, TimeUnit.MILLISECONDS);

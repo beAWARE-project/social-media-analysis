@@ -32,10 +32,10 @@ public class Configuration {
     public static String key = "key";
     public static String kafka_admin_url = "https://kafka-admin-prod02.messagehub.services.eu-gb.bluemix.net:443";
 
+    public static String socialMediaText001 = "TOP001_SOCIAL_MEDIA_TEXT";
     public static String socialMediaText = "social_media_text";
     public static String socialMediaTextDemo = "social_media_text_demo";
     public static String incidentTopic101 = "TOP101_INCIDENT_REPORT";
-    public static String incidentTopic021 = "TOP021_INCIDENT_REPORT";
 
     public static List<String> old_collections = Lists.newArrayList("Association", "Image", "Post", "UserAccount", "Webpage");
     public static String old_host = "";
