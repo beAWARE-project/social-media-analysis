@@ -115,6 +115,8 @@ public class DemoCrawler {
                                 }catch(IOException | InterruptedException | ExecutionException | TimeoutException e){
                                     System.out.println("Error on send: " + e);
                                 }
+                                
+                                mongoClient.close();
             
                             }catch(UnknownHostException | KeyManagementException | NoSuchAlgorithmException e){
                                 System.out.println("Error on demo crawler: " + e);
