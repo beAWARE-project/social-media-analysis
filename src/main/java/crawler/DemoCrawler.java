@@ -44,7 +44,7 @@ public class DemoCrawler {
     public static void main(String[] args) throws InterruptedException, IOException {
         
         KafkaConsumer<String, String> kafkaConsumer = busReader.getKafkaConsumer();
-        kafkaConsumer.subscribe(Arrays.asList(Configuration.socialMediaTextDemo));
+        kafkaConsumer.subscribe(Arrays.asList(Configuration.socialMediaTrigger));
         
         try {
             while (true) {
@@ -111,7 +111,7 @@ public class DemoCrawler {
                                 String twitterReport = TwitterReport.getDummyMessage(collectionName);
 
                                 try{
-                                    bus.post(Configuration.incidentTopic101, twitterReport);
+                                    bus.post(Configuration.incidentTopic021, twitterReport);
                                 }catch(IOException | InterruptedException | ExecutionException | TimeoutException e){
                                     System.out.println("Error on send: " + e);
                                 }

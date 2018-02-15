@@ -31,7 +31,7 @@ public class TwitterReport {
 
         return "{\n" +
         "    \"header\": {\n" +
-        "        \"topicName\": \"TOP101_INCIDENT_REPORT\",\n" +
+        "        \"topicName\": \"TOP021_INCIDENT_REPORT\",\n" +
         "        \"topicMajorVersion\": 1,\n" +
         "        \"topicMinorVersion\": 0,\n" +
         "        \"sender\": \"SMA\",\n" +
@@ -61,8 +61,8 @@ public class TwitterReport {
         "        \"title\": \"\",\n" +
         "        \"description\": \"" + description + "\",\n" +
         "        \"position\": {\n" +
-        "            \"latitude\": 45.43417,\n" +
-        "            \"longitude\": 12.33847\n" +
+        "            \"latitude\": 45.5455,\n" +
+        "            \"longitude\": 11.5354\n" +
         "        },\n" +
         "        \"attachments\": [{\n" +
         "                \"attachmentName\": \""+twitterReport+"\",\n" +
