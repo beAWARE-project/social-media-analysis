@@ -9,6 +9,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 /**
@@ -19,29 +20,54 @@ public class TwitterReport {
     
     public static String getDummyMessage(String collection){
         
-        String twitterReport = "", description = "";
+        String twitterReport = "", description = "", id="", district="", position_x="", position_y="";
         switch(collection){
             case "EnglishFloods": twitterReport = "TwitterReport1516098723965.html";
                                   description = "flooded river flooding rain bridge";
+                                  id = "001";
+                                  district = "Vicenza";
+                                  position_x="45.5455";
+                                  position_y="11.5354";
                                   break;
             case "ItalianFloods": twitterReport = "TwitterReport1518006170454.html";
                                   description = "allagato fiume allagamento pioggia ponte";
+                                  id = "002";
+                                  district = "Vicenza";
+                                  position_x="45.5455";
+                                  position_y="11.5354";
+                                  break;
+            case "SpanishFires":  twitterReport = "TwitterReport1519305864751.html";
+                                  description = "ultima hora camiones fuego humo";
+                                  id = "003";
+                                  district = "Valencia";
+                                  position_x="39.4699";
+                                  position_y="0.3763";
+                                  break;    
+            case "GreekHeatwave": twitterReport = "TwitterReport1519305940233.html";
+                                  description = "ζέστη κλιματιζόμενος χώρος φανάρια ρεύμα";
+                                  id = "004";
+                                  district = "Thessaloniki";
+                                  position_x="40.6401";
+                                  position_y="22.9444";
                                   break;
         }
-
+        
+        LocalDateTime ldt = LocalDateTime.now();
+        String now = ldt.withNano(0) + "Z";
+        
         return "{\n" +
         "    \"header\": {\n" +
         "        \"topicName\": \"TOP021_INCIDENT_REPORT\",\n" +
         "        \"topicMajorVersion\": 1,\n" +
         "        \"topicMinorVersion\": 0,\n" +
         "        \"sender\": \"SMA\",\n" +
-        "        \"msgIdentifier\": \"SMA00000001\",\n" +
-        "        \"sentUTC\": \"2018-01-01T12:00:00Z\",\n" +
+        "        \"msgIdentifier\": \"SMAmsg_"+id+"\",\n" +
+        "        \"sentUTC\": \""+now+"\",\n" +
         "        \"status\": \"Actual\",\n" +
-        "        \"actionType\": \"Update\",\n" +
+        "        \"actionType\": \"Alert\",\n" +
         "        \"specificSender\": \"\",\n" +
         "        \"scope\": \"\",\n" +
-        "        \"district\": \"Thessaloniki\",\n" +
+        "        \"district\": \""+district+"\",\n" +
         "        \"recipients\": \"\",\n" +
         "        \"code\": 0,\n" +
         "        \"note\": \"\",\n" +
@@ -49,25 +75,25 @@ public class TwitterReport {
         "    },\n" +
         "    \"body\": {\n" +
         "        \"incidentOriginator\": \"SMA\",\n" +
-        "        \"incidentID\": \"432115\",\n" +
+        "        \"incidentID\": \"SMAinc_"+id+"\",\n" +
         "        \"language\": \"en-US\",\n" +
         "        \"incidentCategory\": \"Other\",\n" +
         "        \"incidentType\": \"Other\",\n" +
         "        \"priority\": \"undefined\",\n" +
         "        \"severity\": \"Unknown\",\n" +
         "        \"certainty\": \"Observed\",\n" +
-        "        \"startTimeUTC\": \"2018-01-01T12:00:00Z\",\n" +
-        "        \"expirationTimeUTC\": \"2018-01-01T12:00:00Z\",\n" +
+        "        \"startTimeUTC\": \""+now+"\",\n" +
+        "        \"expirationTimeUTC\": \"2019-01-01T12:00:00Z\",\n" +
         "        \"title\": \"\",\n" +
         "        \"description\": \"" + description + "\",\n" +
         "        \"position\": {\n" +
-        "            \"latitude\": 45.5455,\n" +
-        "            \"longitude\": 11.5354\n" +
+        "            \"latitude\": "+position_x+",\n" +
+        "            \"longitude\": "+position_y+"\n" +
         "        },\n" +
         "        \"attachments\": [{\n" +
         "                \"attachmentName\": \""+twitterReport+"\",\n" +
         "                \"attachmentType\": \"webpage\",\n" +
-        "                \"attachmentTimeStampUTC\": \"2018-01-01T12:00:00Z\",\n" +
+        "                \"attachmentTimeStampUTC\": \""+now+"\",\n" +
         "                \"attachmentURL\": \"http://object-store-app.eu-gb.mybluemix.net/objectStorage?file="+twitterReport+"\"\n" +
         "            }\n" +
         "        ]\n" +

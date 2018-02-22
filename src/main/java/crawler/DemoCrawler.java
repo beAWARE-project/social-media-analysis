@@ -19,6 +19,7 @@ import java.lang.reflect.Type;
 import java.net.UnknownHostException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -107,7 +108,7 @@ public class DemoCrawler {
                                     }
                                 }
                                 
-                                //String twitterReport = TwitterReport.generateReport(twitterReportLines);
+                                //String twitterReport = TwitterReport.generateReport(twitterReportLines); System.out.println(twitterReport);
                                 String twitterReport = TwitterReport.getDummyMessage(collectionName);
 
                                 try{
@@ -126,7 +127,7 @@ public class DemoCrawler {
                     }catch(JsonSyntaxException e){
                         System.out.println(e);
                     }
-                }
+                    }
             }
         } finally {
           kafkaConsumer.close(); 
