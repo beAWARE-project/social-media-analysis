@@ -66,7 +66,7 @@ public class TwitterReport {
         "        \"status\": \"Actual\",\n" +
         "        \"actionType\": \"Alert\",\n" +
         "        \"specificSender\": \"\",\n" +
-        "        \"scope\": \"\",\n" +
+        "        \"scope\": \"Public\",\n" +
         "        \"district\": \""+district+"\",\n" +
         "        \"recipients\": \"\",\n" +
         "        \"code\": 0,\n" +
