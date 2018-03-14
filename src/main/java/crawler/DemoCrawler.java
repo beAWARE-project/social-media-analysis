@@ -21,13 +21,14 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import json.*;
 import mykafka.Bus;
 import mykafka.BusReader;
 import mykafka.Card;
-import mykafka.Letter;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -68,7 +69,7 @@ public class DemoCrawler {
                             }
                         }
                         if(exists){
-                            
+        
                             try{
                                 MongoClient mongoClient = MongoAPI.connect();
                                 DB db = mongoClient.getDB("BeAware");
@@ -81,25 +82,48 @@ public class DemoCrawler {
                                     boolean relevancy = (boolean) post.get("estimated_relevancy");
 
                                     if(relevancy){
-                                        long timestamp_ms = System.currentTimeMillis();
+                                        long now = System.currentTimeMillis();
                                         String id = post.get("id_str").toString();
-                                        String date = new java.text.SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy").format(new java.util.Date (timestamp_ms));
+                                        String text = "";
+                                        if(post.containsField("extended_tweet")){
+                                            DBObject extended_tweet = (DBObject) post.get("extended_tweet");
+                                            text = extended_tweet.get("full_text").toString();
+                                        }else{
+                                            text = post.get("text").toString();
+                                        }
+                                        String mongoDate = new java.text.SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy").format(new java.util.Date (now));
                                         BasicDBObject change = new BasicDBObject();
-                                        change.append("$set", new BasicDBObject().append("created_at_live", date));
+                                        change.append("$set", new BasicDBObject().append("created_at_live", mongoDate));
                                         BasicDBObject query = new BasicDBObject().append("id_str", id);
                                         collection.update(query, change);
+                                        
+                                        String language = "";
+                                        if(collectionName.contains("English")){
+                                            language = "en-US";
+                                        }else if(collectionName.contains("Italian")){
+                                            language = "it-IT";
+                                        }else if(collectionName.contains("Greek")){
+                                            language = "el-GR";
+                                        }else if(collectionName.contains("Spanish")){
+                                            language = "es-ES";
+                                        }
+                                        String date = new java.text.SimpleDateFormat("yyyy-MM-d'T'HH:mm:ss'Z'").format(new java.util.Date(now));
 
-                                        Letter letter = new Letter();
-                                        letter.addTweetID(id);
-                                        letter.setTimestamp(timestamp_ms);
-                                        letter.setCollection(collectionName);
-                                        String message = gson.toJson(letter);
+                                        Header header = new Header(Configuration.socialMediaText001, 0, 1, "SMA", "sma-msg-"+id, date, "Actual", "Alert", "citizen", "Restricted", "", "", 0, "", "");
+                                        Position position = new Position(0,0);
+                                        Attachment attachment = new Attachment(collectionName+"_"+id, "tweet", text, date);
+                                        List<Attachment> attachments = new ArrayList<>();
+                                        attachments.add(attachment);
+                                        Body body = new Body("SMA", "SMA"+id, language, date, "", position, attachments);
+                                        Message message = new Message(header, body);
+                                        
+                                        String message_str = gson.toJson(message);
                                         
                                         //DBObject user = (BasicDBObject) post.get("user");
                                         //twitterReportLines.add(new TwitterReportLine(post.get("text").toString(),user.get("name").toString(),post.get("created_at").toString(),id));
 
                                         try{
-                                            bus.post(Configuration.socialMediaText001, message);
+                                            bus.post(Configuration.socialMediaText001, message_str);
                                         }catch(IOException | InterruptedException | ExecutionException | TimeoutException e){
                                             System.out.println("Error on send: " + e);
                                         }
@@ -109,13 +133,6 @@ public class DemoCrawler {
                                 }
                                 
                                 //String twitterReport = TwitterReport.generateReport(twitterReportLines); System.out.println(twitterReport);
-                                String twitterReport = TwitterReport.getDummyMessage(collectionName);
-
-                                try{
-                                    bus.post(Configuration.incidentTopic021, twitterReport);
-                                }catch(IOException | InterruptedException | ExecutionException | TimeoutException e){
-                                    System.out.println("Error on send: " + e);
-                                }
                                 
                                 mongoClient.close();
             
