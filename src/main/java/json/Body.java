@@ -27,7 +27,7 @@ public class Body {
     String startTimeUTC;
     String description;
     Position position;
-    List<Attachment> attachments = new ArrayList<>();
+    TextInformation textInformation;
     
     public Body(){
         
@@ -36,7 +36,7 @@ public class Body {
     public Body(String incidentOriginator, String incidentID, String language,
                     /*String incidentCategory, String incidentType, String priority, String severity,
                     String certainty, String expirationTimeUTC, String title,*/ String startTimeUTC, 
-                    String description, Position position, List<Attachment> attachments){
+                    String description, Position position, TextInformation textInformation){
         this.incidentOriginator = incidentOriginator;
         this.incidentID = incidentID;
         this.language = language;
@@ -50,7 +50,7 @@ public class Body {
         this.startTimeUTC = startTimeUTC;
         this.description = description;
         this.position = position;
-        this.attachments = attachments;
+        this.textInformation = textInformation;
     }
     
 }
