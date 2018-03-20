@@ -111,8 +111,7 @@ public class DemoCrawler {
 
                                         Header header = new Header(Configuration.socialMediaText001, 0, 1, "SMA", "sma-msg-"+id, date, "Actual", "Alert", "citizen", "Restricted", "", "", 0, "", "");
                                         Position position = new Position(0,0);
-                                        TextInformation textInformation = new TextInformation(collectionName+"_"+id, "tweet", text);
-                                        Body body = new Body("SMA", collectionName+"_"+id, language, date, "", position, textInformation);
+                                        Body body = new Body("SMA", collectionName+"_"+id, language, date, text, position);
                                         Message message = new Message(header, body);
                                         
                                         String message_str = gson.toJson(message);

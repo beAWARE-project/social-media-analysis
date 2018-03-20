@@ -27,7 +27,6 @@ public class Body {
     String startTimeUTC;
     String description;
     Position position;
-    TextInformation textInformation;
     
     public Body(){
         
@@ -36,7 +35,7 @@ public class Body {
     public Body(String incidentOriginator, String incidentID, String language,
                     /*String incidentCategory, String incidentType, String priority, String severity,
                     String certainty, String expirationTimeUTC, String title,*/ String startTimeUTC, 
-                    String description, Position position, TextInformation textInformation){
+                    String description, Position position){
         this.incidentOriginator = incidentOriginator;
         this.incidentID = incidentID;
         this.language = language;
@@ -50,7 +49,6 @@ public class Body {
         this.startTimeUTC = startTimeUTC;
         this.description = description;
         this.position = position;
-        this.textInformation = textInformation;
     }
     
 }
