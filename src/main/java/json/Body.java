@@ -51,4 +51,12 @@ public class Body {
         this.position = position;
     }
     
+    public Body(String incidentOriginator, String incidentID, String language, String startTimeUTC, String description){
+        this.incidentOriginator = incidentOriginator;
+        this.incidentID = incidentID;
+        this.language = language;
+        this.startTimeUTC = startTimeUTC;
+        this.description = description;
+    }
+    
 }

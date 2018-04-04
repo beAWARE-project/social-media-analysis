@@ -110,8 +110,7 @@ public class DemoCrawler {
                                         String date = new java.text.SimpleDateFormat("yyyy-MM-d'T'HH:mm:ss'Z'").format(new java.util.Date(now));
 
                                         Header header = new Header(Configuration.socialMediaText001, 0, 1, "SMA", "sma-msg-"+id, date, "Actual", "Alert", "citizen", "Restricted", "", "", 0, "", "");
-                                        Position position = new Position(0,0);
-                                        Body body = new Body("SMA", collectionName+"_"+id, language, date, text, position);
+                                        Body body = new Body("SMA", collectionName+"_"+id, language, date, text);
                                         Message message = new Message(header, body);
                                         
                                         String message_str = gson.toJson(message);
