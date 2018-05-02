@@ -94,7 +94,7 @@ public class TwitterReport {
         "                \"attachmentName\": \""+twitterReport+"\",\n" +
         "                \"attachmentType\": \"webpage\",\n" +
         "                \"attachmentTimeStampUTC\": \""+now+"\",\n" +
-        "                \"attachmentURL\": \"http://object-store-app.eu-gb.mybluemix.net/objectStorage?file="+twitterReport+"\"\n" +
+        "                \"attachmentURL\": \"" + Configuration.DATA_STORAGE_URL + twitterReport+"\"\n" +
         "            }\n" +
         "        ]\n" +
         "    }\n" +

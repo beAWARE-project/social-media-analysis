@@ -43,4 +43,6 @@ public class Configuration {
     public static String old_password = "";
 
     public static String local_host = "127.0.0.1";
+    
+    public static String DATA_STORAGE_URL = "https://beaware.uk-south.containers.mybluemix.net/object-store/";
 }
