@@ -26,17 +26,6 @@ package messagehub.rest;
  */
 public class RESTAdmin {
     
-    /*static String adminRestURL = "https://kafka-admin-prod02.messagehub.services.eu-gb.bluemix.net:443";
-    static String apiKey = "BPWTh17zQ2kDvxuvmSoHqZEHEbbu6izktAHKC8aD2EGDVNeO";
-    static String topicName = "social_media_text_demo";
-    
-    public static void main(String[] args) throws Exception {
-        String restResponse = createTopic(adminRestURL, apiKey, topicName);
-        System.out.println(restResponse);
-        String topics = RESTAdmin.listTopics(adminRestURL, apiKey);
-        System.out.println("Admin REST Listing Topics: " + topics);
-    }*/
-    
     //used as topic retention period
     private static final long _24H_IN_MILLISECONDS = 3600000L*24;
 
