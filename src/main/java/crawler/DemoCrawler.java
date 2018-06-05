@@ -107,7 +107,7 @@ public class DemoCrawler {
                                         }else if(collectionName.contains("Spanish")){
                                             language = "es-ES";
                                         }
-                                        String date = new java.text.SimpleDateFormat("yyyy-MM-d'T'HH:mm:ss'Z'").format(new java.util.Date(now));
+                                        String date = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(new java.util.Date(now));
 
                                         Header header = new Header(Configuration.socialMediaText001, 0, 1, "SMA", "sma-msg-"+id, date, "Actual", "Alert", "citizen", "Restricted", "", "", 0, "", "");
                                         Body body = new Body("SMA", collectionName+"_"+id, language, date, text);
