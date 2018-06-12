@@ -90,8 +90,10 @@ public class DemoCrawler {
                                             text = post.get("text").toString();
                                         }
                                         DBObject coordinates = (DBObject) post.get("coordinates");
+                                        boolean hasPosition = false;
                                         Position position = new Position();
                                         if(coordinates!=null){
+                                            hasPosition = true;
                                             BasicDBList coordinatesList = (BasicDBList) coordinates.get("coordinates");
                                             position = new Position((double) coordinatesList.get(1),(double) coordinatesList.get(0));
                                         }
@@ -114,7 +116,13 @@ public class DemoCrawler {
                                         String date = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(new java.util.Date(now));
 
                                         Header header = new Header(Configuration.socialMediaText001, 0, 1, "SMA", "sma-msg-"+id, date, "Actual", "Alert", "citizen", "Restricted", "", "", 0, "", "");
-                                        Body body = new Body("SMA", collectionName+"_"+id, language, date, text, position);
+                                        Body body;
+                                        if(hasPosition){
+                                            body = new Body("SMA", collectionName+"_"+id, language, date, text, position);
+                                        }else{
+                                            body = new Body("SMA", collectionName+"_"+id, language, date, text);
+                                        }
+                                        
                                         Message message = new Message(header, body);
                                         
                                         String message_str = gson.toJson(message);
