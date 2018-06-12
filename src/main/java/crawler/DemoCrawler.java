@@ -8,6 +8,7 @@ package crawler;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -19,9 +20,7 @@ import java.lang.reflect.Type;
 import java.net.UnknownHostException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -76,7 +75,6 @@ public class DemoCrawler {
                                 DBCollection collection = db.getCollection(collectionName);
                                 
                                 DBCursor cursor = collection.find();
-                                //ArrayList<TwitterReportLine> twitterReportLines = new ArrayList<>();
                                 while (cursor.hasNext()) {
                                     DBObject post = cursor.next();
                                     boolean relevancy = (boolean) post.get("estimated_relevancy");
@@ -90,6 +88,12 @@ public class DemoCrawler {
                                             text = extended_tweet.get("full_text").toString();
                                         }else{
                                             text = post.get("text").toString();
+                                        }
+                                        DBObject coordinates = (DBObject) post.get("coordinates");
+                                        Position position = new Position();
+                                        if(coordinates!=null){
+                                            BasicDBList coordinatesList = (BasicDBList) coordinates.get("coordinates");
+                                            position = new Position((double) coordinatesList.get(1),(double) coordinatesList.get(0));
                                         }
                                         String mongoDate = new java.text.SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy").format(new java.util.Date (now));
                                         BasicDBObject change = new BasicDBObject();
@@ -110,14 +114,11 @@ public class DemoCrawler {
                                         String date = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(new java.util.Date(now));
 
                                         Header header = new Header(Configuration.socialMediaText001, 0, 1, "SMA", "sma-msg-"+id, date, "Actual", "Alert", "citizen", "Restricted", "", "", 0, "", "");
-                                        Body body = new Body("SMA", collectionName+"_"+id, language, date, text);
+                                        Body body = new Body("SMA", collectionName+"_"+id, language, date, text, position);
                                         Message message = new Message(header, body);
                                         
                                         String message_str = gson.toJson(message);
                                         
-                                        //DBObject user = (BasicDBObject) post.get("user");
-                                        //twitterReportLines.add(new TwitterReportLine(post.get("text").toString(),user.get("name").toString(),post.get("created_at").toString(),id));
-
                                         try{
                                             bus.post(Configuration.socialMediaText001, message_str);
                                         }catch(IOException | InterruptedException | ExecutionException | TimeoutException e){
@@ -127,8 +128,6 @@ public class DemoCrawler {
                                         TimeUnit.SECONDS.sleep(3);
                                     }
                                 }
-                                
-                                //String twitterReport = TwitterReport.generateReport(twitterReportLines); System.out.println(twitterReport);
                                 
                                 mongoClient.close();
             

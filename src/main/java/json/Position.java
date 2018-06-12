@@ -11,14 +11,14 @@ package json;
  */
 public class Position {
     
-    float latitude;
-    float longitude;
+    double latitude;
+    double longitude;
     
     public Position(){
         
     }
     
-    public Position(float latitude, float longitude){
+    public Position(double latitude, double longitude){
         this.latitude = latitude;
         this.longitude = longitude;
     }
