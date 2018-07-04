@@ -118,9 +118,9 @@ public class DemoCrawler {
                                         Header header = new Header(Configuration.socialMediaText001, 0, 1, "SMA", "sma-msg-"+id, date, "Actual", "Alert", "citizen", "Restricted", "", "", 0, "", "");
                                         Body body;
                                         if(hasPosition){
-                                            body = new Body("SMA", collectionName+"_"+id, language, date, text, position);
+                                            body = new Body("SMA", "INC_SMA_"+collectionName+"_"+id, language, date, text, position);
                                         }else{
-                                            body = new Body("SMA", collectionName+"_"+id, language, date, text);
+                                            body = new Body("SMA", "INC_SMA_"+collectionName+"_"+id, language, date, text);
                                         }
                                         
                                         Message message = new Message(header, body);
