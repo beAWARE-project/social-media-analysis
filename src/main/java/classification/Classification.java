@@ -5,6 +5,7 @@
  */
 package classification;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
@@ -13,12 +14,16 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
+import crawler.Configuration;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -27,9 +32,6 @@ import java.util.Collections;
  * @author andreadisst
  */
 public class Classification {
-    
-    private static final double EPSILON = 0.3;
-    private static final int MIN_TRAIN_DATA = 20;
     
     public static ImageResponse classifyImage(String imageURL, String useCase){
         
@@ -46,7 +48,7 @@ public class Classification {
 
         try {
 
-            URL url = new URL("http://160.40.49.111:911/api/floodDetectionService/query?imageURL="+imageURL+"&concept="+concept);
+            URL url = new URL("http://160.40.49.111:9011/api/floodDetectionService/query?imageURL="+imageURL+"&concept="+concept);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
@@ -75,7 +77,54 @@ public class Classification {
         return ir;
     }
     
-    public static TextResponse classifyText(String text, String useCase, DB db){
+    public static String classifyText(String text, String useCase){
+        
+        String concept = ""; String language = "";
+        if(useCase.contains("Fires")){
+            concept = "fire";
+            language = useCase.replace("Fires", "");
+        }else if(useCase.contains("Heatwave")){
+            concept = "heatwave";
+            language = useCase.replace("Heatwave", "");
+        }else if(useCase.contains("Floods")){
+            concept = "flood";
+            language = useCase.replace("Floods", "");
+        }
+        
+        try {
+            text = URLEncoder.encode(text, "UTF-8");
+            URL url = new URL("http://160.40.49.111:9014/TextClassificationServiceBeAware?concept="+concept+"&language="+language+"&text="+text);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "text/plain");
+            if (conn.getResponseCode() == 200) {
+                BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+                try{
+                    String output = br.readLine();
+                    if(!output.equals("null")){
+                        if(output.equals("[\"0\"]")){
+                            return "false";
+                        }else if(output.equals("[\"1\"]")){
+                            return "true";
+                        }
+                    }
+                } catch (JsonSyntaxException | IOException e){
+                    System.out.println("Error on image classification: " + e);
+                }
+            }
+
+            conn.disconnect();
+
+        } catch (MalformedURLException e) {
+            System.out.println("Error on image classification: " + e);
+        } catch (IOException e) {
+            System.out.println("Error on image classification: " + e);
+        }
+        
+        return "";
+    }
+    
+    /*public static TextResponse classifyText(String text, String useCase, DB db){
         
         String concepts = SpotlightDBPedia.getConceptsFromSpotlightDBPedia(text,useCase);
         TextResponse tr = new TextResponse(concepts, false);
@@ -105,6 +154,6 @@ public class Classification {
             }
         }
         return tr;
-    }
+    }*/
     
 }

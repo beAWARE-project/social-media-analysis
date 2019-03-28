@@ -12,17 +12,23 @@ package mykafka;
 public class Card {
     
     String collection;
+    int bunch;
     
     public Card(){
         
     }
     
-    public Card(String collection){
+    public Card(String collection, int bunch){
         this.collection = collection;
+        this.bunch = bunch;
     }
     
     public String getCollection(){
         return collection;
+    }
+    
+    public int getBunch(){
+        return bunch;
     }
     
 }
