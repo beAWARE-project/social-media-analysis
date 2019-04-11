@@ -21,7 +21,7 @@ spec:
         app: social-media-analysis
     spec:
       containers:
-      - image: beaware/social-media-analysis:IMAGE_TAG
+      - image: beaware/social-media-analysis:v2
         imagePullPolicy: Always
         name: social-media-analysis
         ports:
