@@ -292,11 +292,20 @@ public class DemoCrawler {
         }else if(useCase.contains("Spanish")){
             language = "es-ES";
         }
+        
+        String district = "";
+        if(useCase.contains("Floods")){
+            district = "Vicenza";
+        }else if(useCase.contains("Heatwave")){
+            district = "Thessaloniki";
+        }else if(useCase.contains("Fires")){
+            district = "Valencia";
+        }
 
         long now = System.currentTimeMillis();
         String date = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(new java.util.Date(now));
 
-        Header header = new Header(Configuration.socialMediaText001, 0, 1, "SMA", "sma-msg-"+now, date, "Actual", "Alert", "citizen", "Restricted", "", "", 0, "", "");
+        Header header = new Header(Configuration.socialMediaText001, 0, 1, "SMA", "sma-msg-"+now, date, "Actual", "Alert", "citizen", "Restricted", district, "", 0, "", "");
 
         Body body;
         if(position.getLatitude()==0.0 && position.getLongitude()==0.0){
