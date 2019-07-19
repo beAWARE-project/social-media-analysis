@@ -325,8 +325,38 @@ public class DemoCrawler {
     }
     
     private static Position getLocation(String msg){
-        Position position = new Position(0,0); //default Thessaloniki?
+        Position position = new Position(0,0);
         
+        /* PILOT 3 */
+        if(msg.contains("VA639")){
+            return new Position(39.470122, -0.376365);
+        }else if(msg.contains("PN227")){
+            return new Position(39.338871, -0.344753);
+        }else if(msg.contains("DS813")){
+            return new Position(39.357576, -0.324978);
+        }else if(msg.contains("ES590")){
+            return new Position(39.382862, -0.329648);
+        }else if(msg.contains("CS411")){
+            return new Position(39.381683, -0.331412);
+        }else if(msg.contains("TR962")){
+            return new Position(39.375969, -0.32913);
+        }else if(msg.contains("RO830")){
+            return new Position(39.339196, -0.319718);
+        }else if(msg.contains("PF002")){
+            return new Position(39.366288, -0.318077);
+        }else if(msg.contains("CV576")){
+            return new Position(39.378063, -0.326468);
+        }else if(msg.contains("PS291")){
+            return new Position(39.377880, -0.322412);
+        }else if(msg.contains("AG749")){
+            return new Position(39.411520, -0.332342);
+        }else if(msg.contains("MS388")){
+            return new Position(39.381224, -0.327893);
+        }else if(msg.contains("AP004")){
+            return new Position(39.381091, -0.332261);
+        }
+        
+        /* PILOT 2 */
         if(msg.contains("S32ap")){
             return new Position(45.5493, 11.5497);
         }else if(msg.contains("M90xz")){
@@ -339,7 +369,8 @@ public class DemoCrawler {
             return new Position(45.5455, 11.5354);
         }
         
-        /*if(msg.contains("ΚΘ_4")){
+        /* PILOT 1 */
+        if(msg.contains("ΚΘ_4")){
             return new Position(40.6207, 22.9649);
         }else if(msg.contains("ΚΘ_6")){
             return new Position(40.6019, 22.9736);
@@ -355,7 +386,7 @@ public class DemoCrawler {
             return new Position(40.6266, 22.9526);
         }else if(msg.contains("ΔΒ")){
             return new Position(40.5956, 22.9600);
-        }*/
+        }
         
         return position;
     }
@@ -363,10 +394,18 @@ public class DemoCrawler {
     private static String replaceLocation(String msg){
         String tweet = msg;
         
+        /* PILOT 3 */
+        tweet = tweet.replace("VA639", "Valencia").replace("PN227", "el Parque Natural de la Albufera").replace("DS813", "la Devesa").replace("ES590", "el Saler")
+                .replace("CS411","el instituto del Saler").replace("TR962","Tallafoc de la Rambla").replace("RO830","Racó de l´Olla").replace("PF002","playa dels Ferros")
+                .replace("CV576","Camí Vell de la Devesa").replace("PS291","playa del Saler").replace("AG749","playa de l'Arbre del Gos").replace("MS388","la Mallada del Saler")
+                .replace("AP004","Avenida de los Pinares");
+        
+        /* PILOT 2 */
         tweet = tweet.replace("S32ap", "Matteotti").replace("M90xz", "Angeli").replace("C44ud", "Vicenza").replace("F77ad", "Bacchiglione").replace("3vg87","Pusterla");
         
-        /*tweet = tweet.replace("ΚΘ_4", "4ο ΚΑΠΗ").replace("ΚΘ_6", "6ο ΚΑΠΗ").replace("ΠΑΤ", "Πλατεία Αριστοτέλους").replace("ΠΧ", "Χαριλάου").replace("ΠΤ", "Τούμπα")
-                .replace("ΔΕ", "Εγνατία").replace("ΔΤ", "Τσιμισκή").replace("ΔΒ", "Βούλγαρη");*/
+        /* PILOT 1 */
+        tweet = tweet.replace("ΚΘ_4", "4ο ΚΑΠΗ").replace("ΚΘ_6", "6ο ΚΑΠΗ").replace("ΠΑΤ", "Πλατεία Αριστοτέλους").replace("ΠΧ", "Χαριλάου").replace("ΠΤ", "Τούμπα")
+                .replace("ΔΕ", "Εγνατία").replace("ΔΤ", "Τσιμισκή").replace("ΔΒ", "Βούλγαρη");
         
         return tweet;
     }
