@@ -57,6 +57,7 @@ public class DemoCrawler {
         try {
             while (true) {
                 ConsumerRecords<String, String> records = kafkaConsumer.poll(100);
+                
                 for (ConsumerRecord<String, String> record : records)
                 {
                     String receivedMessage = record.value();
