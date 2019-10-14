@@ -6,4 +6,4 @@ COPY target/social-media-analysis-1.1-jar-with-dependencies.jar /usr/src/social-
 
 WORKDIR /usr/src/social-media-analysis
 
-#CMD ["java", "-jar", "social-media-analysis-1.1-jar-with-dependencies.jar"]
+CMD ["java", "-jar", "social-media-analysis-1.1-jar-with-dependencies.jar"]
