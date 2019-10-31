@@ -75,7 +75,8 @@ public class DemoCrawler {
                                 }
                             }
                         }
-                        if(exists && card.getBunch() > 0 && card.getBunch() <6){
+                        System.out.println("Out: "+card.getCollection()+" "+card.getBunch());
+                        /*if(exists && card.getBunch() > 0 && card.getBunch() <6){
         
                             try{
                                 MongoClient mongoClient = MongoAPI.connect();
@@ -97,12 +98,13 @@ public class DemoCrawler {
                             }catch(UnknownHostException | KeyManagementException | NoSuchAlgorithmException e){
                                 System.out.println("Error in social media analysis: " + e);
                             }
-                        }
+                        }*/
                         
                     }catch(JsonSyntaxException e){
                         System.out.println(e);
                     }
                     }
+                System.out.println("the end");
             }
         } finally {
           kafkaConsumer.close(); 
