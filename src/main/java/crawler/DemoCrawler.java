@@ -95,7 +95,7 @@ public class DemoCrawler {
                                 mongoClient.close();
             
                             }catch(UnknownHostException | KeyManagementException | NoSuchAlgorithmException e){
-                                System.out.println("Error on demo crawler: " + e);
+                                System.out.println("Error in social media analysis: " + e);
                             }
                         }
                         
