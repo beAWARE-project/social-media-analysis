@@ -61,10 +61,11 @@ public class DemoCrawler {
                 for (ConsumerRecord<String, String> record : records)
                 {
                     String receivedMessage = record.value();
+                    System.out.println(receivedMessage);
                     
                     Type type = new TypeToken<Card>() {}.getType();
                     
-                    try{
+                    /*try{
                         Card card = gson.fromJson(receivedMessage, type);
                         String collectionName = card.getCollection();
                         boolean exists = false;
@@ -101,7 +102,7 @@ public class DemoCrawler {
                         
                     }catch(JsonSyntaxException e){
                         System.out.println(e);
-                    }
+                    }*/
                     }
             }
         } finally {
