@@ -113,6 +113,11 @@ public class DemoCrawler {
         
         JsonObject obj = new JsonParser().parse(msg).getAsJsonObject();
         
+        long now = System.currentTimeMillis();
+        String mongoDate = new java.text.SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy").format(new java.util.Date (now));
+        obj.addProperty("created_at", mongoDate);
+        obj.addProperty("timestamp_ms", String.valueOf(now));
+        
         String text = getText(obj);
         Position position = getLocation(text); //this could be added to json
         obj = updateText(obj);
@@ -258,11 +263,6 @@ public class DemoCrawler {
     private static void insert(JsonObject obj, String useCase){
         
         obj.remove("_id");
-        
-        long now = System.currentTimeMillis();
-        String mongoDate = new java.text.SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy").format(new java.util.Date (now));
-        obj.addProperty("created_at", mongoDate);
-        obj.addProperty("timestamp_ms", String.valueOf(now));
         
         try {
             MongoClient mongoClient = MongoAPI.connect();
